@@ -100,11 +100,15 @@ export default class Customer extends AggregateRoot {
         this.registerEvent("CustomerAddressChangedEvent", new EnviaConsoleLogWhenCustomerAddressIsChangedHandler());
 
         const customerAddressChangedEvent = new CustomerAddressChangedEvent({
-            street: this._address.street,
-            number: this._address.number,
-            city: this._address.city,
-            state: this._address.state,
-            zip: this._address.zip
+            id: this._id,
+            name: this._name,
+            address: {
+                street: this._address.street,
+                number: this._address.number,
+                city: this._address.city,
+                state: this._address.state,
+                zip: this._address.zip
+            }
         });
 
         this.notifyEvents(customerAddressChangedEvent);
