@@ -17,6 +17,7 @@ export default class CustomerRepository implements CustomerRepositoryInterface {
             state: entity.Address.state,
             zip: entity.Address.zip
         })
+        entity.notifyThatCostumerWasCreated();
     }
 
     async update(entity: Customer): Promise<void> {

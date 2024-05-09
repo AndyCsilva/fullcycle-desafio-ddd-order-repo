@@ -1,6 +1,12 @@
+import CustomerAddressChangedEvent from "../event/customer/customer-address.changed.event";
+import CustomerCreatedEvent from "../event/customer/customer-created.event";
+import EnviaConsoleLog1WhenCustomerIsCreatedHandler from "../event/customer/handler/envia-console-log-1-when-customer-is-created.handler";
+import EnviaConsoleLog2WhenCustomerIsCreatedHandler from "../event/customer/handler/envia-console-log-2-when-customer-is-created.handler";
+import EnviaConsoleLogWhenCustomerAddressIsChangedHandler from "../event/customer/handler/envia-console-log-when-customer-address-is-changed";
 import Address from "./address";
+import AggregateRoot from "./aggregate-root";
 
-export default class Customer {
+export default class Customer extends AggregateRoot {
     
     private _id: string;
     private _name: string;
@@ -9,6 +15,7 @@ export default class Customer {
     private _rewardPoints: number = 0;
 
     constructor(id: string, name: string) {
+        super();
         this._id = id;
         this._name = name;
 
@@ -47,6 +54,7 @@ export default class Customer {
             throw new Error('Address is required');
         }
         this._address = address;
+        this.notifyThatCostumerAddressWasChanged();
     }
 
     activate() {
@@ -74,5 +82,31 @@ export default class Customer {
             throw new Error('Points must be greater than zero');
         }
         this._rewardPoints += points;
+    }
+
+    notifyThatCostumerWasCreated() {
+        this.registerEvent("CustomerCreatedEvent", new EnviaConsoleLog1WhenCustomerIsCreatedHandler());
+        this.registerEvent("CustomerCreatedEvent", new EnviaConsoleLog2WhenCustomerIsCreatedHandler());
+
+        const customerCreatedEvent = new CustomerCreatedEvent({
+            id: this.id,
+            name: this.name,
+        });
+
+        this.notifyEvents(customerCreatedEvent);
+    }
+
+    notifyThatCostumerAddressWasChanged() {
+        this.registerEvent("CustomerAddressChangedEvent", new EnviaConsoleLogWhenCustomerAddressIsChangedHandler());
+
+        const customerAddressChangedEvent = new CustomerAddressChangedEvent({
+            street: this._address.street,
+            number: this._address.number,
+            city: this._address.city,
+            state: this._address.state,
+            zip: this._address.zip
+        });
+
+        this.notifyEvents(customerAddressChangedEvent);
     }
 }

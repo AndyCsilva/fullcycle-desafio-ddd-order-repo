@@ -48,5 +48,4 @@ describe('Product unit test', () => {
         expect(product.price).toBe(200); 
     });
 
-
 })
