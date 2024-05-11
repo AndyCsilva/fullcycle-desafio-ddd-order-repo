@@ -5,8 +5,9 @@ import EnviaConsoleLog2WhenCustomerIsCreatedHandler from "../event/handler/envia
 import EnviaConsoleLogWhenCustomerAddressIsChangedHandler from "../event/handler/envia-console-log-when-customer-address-is-changed";
 import Address from "../value-object/address";
 import AggregateRoot from "../../@shared/entity/aggregate-root";
+import CustomerInterface from "./customer.interface";
 
-export default class Customer extends AggregateRoot {
+export default class Customer extends AggregateRoot implements CustomerInterface {
     
     private _id: string;
     private _name: string;
